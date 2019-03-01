@@ -462,6 +462,8 @@ int main()
 				kiss_entry_event(&entry, &e, &draw);
 				button_ok2_event(&button_ok2, &e, &win, &window2,
 					&progressbar, &draw);
+				button_event_tomenu(&menu, &e, &draw, &onstart, &mode);
+
 			}
 		}
 		if (onstart == 1)
@@ -590,6 +592,8 @@ int main()
 			vscrollbar1_event(&vscrollbar1, NULL, &textbox1, &draw);
 			vscrollbar2_event(&vscrollbar2, NULL, &textbox2, &draw);
 			kiss_progressbar_event(&progressbar, NULL, &draw);
+			//open = 0;
+			kiss_button_new(&menu, &win, "TO MENU", 200, 850);
 
 			if (!draw) 
 				continue;
@@ -603,6 +607,7 @@ int main()
 			kiss_vscrollbar_draw(&vscrollbar2, ren);
 			kiss_label_draw(&label_sel, ren);
 			kiss_entry_draw(&entry, ren);
+			kiss_button_draw(&menu, ren);
 			kiss_button_draw(&button_ok1, ren);
 			kiss_button_draw(&button_cancel, ren);
 			kiss_window_draw(&window2, ren);
@@ -611,6 +616,7 @@ int main()
 			kiss_button_draw(&button_ok2, ren);
 			SDL_RenderPresent(ren);
 			draw = 0;
+			open = 0;
 			int flag;
 			if (strlen(label_res.text) && flag != 5)
 			{
