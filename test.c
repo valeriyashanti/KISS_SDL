@@ -1,4 +1,5 @@
 #include "ui.h"
+
 // ПИЗДЕЦ
 
 static void text_reset(kiss_textbox *textbox, kiss_vscrollbar *vscrollbar)
@@ -242,7 +243,6 @@ int main()
 		2 * kiss_vslider.h);
 	dirent_read(&textbox1, &vscrollbar1, &textbox2, &vscrollbar2,
 		&label_sel);
-
 	// КОННЕЦ
 
 	int server = 0;
@@ -259,6 +259,8 @@ int main()
 	kiss_button menu = {0};
 	kiss_button b_cpu = {0};
 	kiss_entry input = {0};
+	char *ip;
+	ip = "e2r4p6";
 	kiss_button b_gpu = {0};
 	kiss_button disconect = {0};
 	kiss_button b_network = {0};
@@ -290,6 +292,16 @@ int main()
 				button_event_connect(&get_ip, &e, &draw, input.text);
 				button_event_tomenu(&menu, &e, &draw, &onstart, &mode);
 				button_event_disconnect(&disconect, &e, &draw);
+ 				kiss_entry_event(&input, &e, &draw);
+        		if (!draw) continue;
+				SDL_RenderClear(ren);
+				kiss_window_draw(&win, ren);
+				kiss_label_draw(&label, ren);
+				kiss_button_draw(&get_ip, ren);
+				kiss_button_draw(&disconect, ren);
+				kiss_entry_draw(&input, ren);
+				kiss_button_draw(&menu, ren);
+				SDL_RenderPresent(ren);
 			}
 			if (mode == 0)
 			{
@@ -329,6 +341,40 @@ int main()
 				button_ok2_event(&button_ok2, &e, &win, &window2,
 					&progressbar, &draw);
 				button_event_tomenu(&menu, &e, &draw, &onstart, &mode);
+				if (!draw)
+					continue;
+				SDL_RenderClear(ren);
+				kiss_window_draw(&win, ren);
+				kiss_label_draw(&label1, ren);
+				kiss_label_draw(&label2, ren);
+				kiss_textbox_draw(&textbox1, ren);
+				kiss_vscrollbar_draw(&vscrollbar1, ren);
+				kiss_textbox_draw(&textbox2, ren);
+				kiss_vscrollbar_draw(&vscrollbar2, ren);
+				kiss_label_draw(&label_sel, ren);
+				kiss_entry_draw(&entry, ren);
+				kiss_button_draw(&menu, ren);
+				kiss_button_draw(&button_ok1, ren);
+				kiss_button_draw(&button_cancel, ren);
+				kiss_window_draw(&window2, ren);
+				kiss_label_draw(&label_res, ren);
+				kiss_progressbar_draw(&progressbar, ren);
+				kiss_button_draw(&button_ok2, ren);
+				SDL_RenderPresent(ren);
+				int flag;
+				if (strlen(label_res.text) && flag != 5)
+				{
+					SDL_Window *new_w;
+					new_w = SDL_CreateWindow("win", 0, 0, 500, 500, 0);
+					SDL_Surface *image;
+					SDL_Surface *win_surface;
+					win_surface = SDL_GetWindowSurface(new_w);
+					image = SDL_LoadBMP(label_res.text);
+					SDL_BlitSurface(image, NULL, win_surface, NULL);
+					SDL_UpdateWindowSurface(new_w);
+					printf("%s\n\n\n", label_res.text);
+					flag = 5;
+				}
 			}
 		}
 
@@ -340,6 +386,7 @@ int main()
 			kiss_label_new(&label, &win, message, win.rect.w / 2 - strlen(message) * kiss_textfont.advance / 2, 100);
 			kiss_button_new(&button, &win, "CLIENT", 200, 750);
 			kiss_button_new(&button1, &win, "SERVER", 200, 800);
+			onstart = 0;
 			win.visible = 1;
 				if (!draw)
 			continue;
@@ -349,12 +396,12 @@ int main()
 			kiss_button_draw(&button1, ren);	
 			kiss_label_draw(&label, ren);
 			SDL_RenderPresent(ren);
-			onstart = 0;
 			mode = 0;
 			draw = 0;
 		}
 		if (client == 1)
 		{
+			mode = 2;
 			kiss_array_new(&objects);
 			kiss_window_new(&win, NULL, 0, 0, 0, kiss_screen_width, kiss_screen_height);
 			strcpy(message, "THIS IS CLIENT MODE\n     CHOOSE IP:");
@@ -365,8 +412,9 @@ int main()
 			kiss_textbox textbox1 = {0};
 			kiss_label label1 = {0}, label2 = {0};
 			int textbox_width =  300;
-			kiss_entry_new(&input, &win, 1, "e2r10p1", 100, 240, 300);
-			mode = 2;
+			kiss_entry_new(&input, &win, 1, ip, 100, 240, 300);
+
+
 			win.visible = 1;
 			client = 0;
 				if (!draw)
@@ -393,6 +441,8 @@ int main()
 			kiss_button_new(&b_gpu, &win, "GPU MODE", 200, 550);
 			kiss_button_new(&b_network, &win, "NETWORK", 200, 600);
 			kiss_button_new(&menu, &win, "TO MENU", 200, 800);
+
+
 			win.visible = 1;
 			server = 0;
 				if (!draw)

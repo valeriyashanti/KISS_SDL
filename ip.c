@@ -26,7 +26,6 @@ int main(int argc, char **argv)
 	label.textcolor.r = 255;
 	kiss_button_new(&button, &window, "OK", 120, 70);
 	window.visible = 1;
-
 	kiss_textbox textbox1 = {0};
 	kiss_entry entry = {0};
 	kiss_label label1 = {0}, label2 = {0};
@@ -37,7 +36,6 @@ int main(int argc, char **argv)
 		SDL_Delay(10);
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) quit = 1;
-			//kiss_window_event(&window, &e, &draw);
 			button_event(&button, &e, &draw, &quit);
 			kiss_entry_event(&entry, &e, &draw);
 		}
